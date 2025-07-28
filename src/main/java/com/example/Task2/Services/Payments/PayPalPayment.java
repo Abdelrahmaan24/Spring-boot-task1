@@ -2,8 +2,8 @@ package com.example.Task2.Services.Payments;
 
 import org.springframework.stereotype.Component;
 
-@Component
-public class PayPalPayment implements PaymentService{
+@Component("Paypal")
+public class PayPalPayment implements Payment {
 
     @Override
     public String pay(int accNumber) {

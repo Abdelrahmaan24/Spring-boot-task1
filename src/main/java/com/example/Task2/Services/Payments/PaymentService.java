@@ -1,7 +1,8 @@
 package com.example.Task2.Services.Payments;
 
-public interface PaymentService {
+import org.springframework.stereotype.Service;
 
-    String pay(int accNumber);
+@Service
+public class PaymentService {
 
 }

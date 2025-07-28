@@ -1,10 +1,8 @@
 package com.example.Task2.Controllers;
 
-import com.example.Task2.Services.Payments.ApplePayPayment;
-import com.example.Task2.Services.Payments.PayPalPayment;
-import com.example.Task2.Services.Payments.PaymentService;
-import com.example.Task2.Services.Payments.StripePayment;
+import com.example.Task2.Services.Payments.Payment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,34 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     @Autowired
-    PayPalPayment payPalPayment;
-
-    @Autowired
-    ApplePayPayment applePayPayment;
-
-    @Autowired
-    StripePayment stripePayment;
+    private ApplicationContext context;
 
     @PostMapping
     public String PaymentProcess(@RequestParam int accNumber, @RequestParam String paymentMethod) {
 
-        PaymentService paymentService;
-
-        switch (paymentMethod){
-            case "PayPal":
-                paymentService = payPalPayment;
-                break;
-            case "ApplePay":
-                paymentService = applePayPayment;
-                break;
-            case "Stripe":
-                paymentService = stripePayment;
-                break;
-            default:
-                return "Payment method not supported: " + paymentMethod;
+        try {
+            Payment paymentService = (Payment) context.getBean(paymentMethod);
+            return paymentService.pay(accNumber);
+        }catch (Exception e){
+            return "Payment method not supported: " + paymentMethod;
         }
-
-        return paymentService.pay(accNumber);
     }
 
 }
